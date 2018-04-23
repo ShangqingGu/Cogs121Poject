@@ -39,8 +39,7 @@ app.get('/', index.view);
 app.get('/course', course.view);
 app.get('/friend', friend.view);
 app.get('/setting', setting.view);
-// Example route
-// app.get('/users', user.list);
+
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
