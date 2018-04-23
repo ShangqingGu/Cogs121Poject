@@ -40,6 +40,29 @@ app.get('/course', course.view);
 app.get('/friend', friend.view);
 app.get('/setting', setting.view);
 
+//milestone3 fake database and get classes
+const fakeDatabase = {
+  'COGS120': {prof:'Prof. Scott Klemmer', time:'9:00am - 10:50am'},
+  'COGS17': {prof:'Dr. Johnson', time:'3:30pm - 4:50pm'},
+  'COGS121': {prof:'Prof. Phillip Guo',time: '2:00pm - 2:50pm'}
+};
+
+app.get('/classes', (req, res) => {
+  const allClasses = Object.keys(fakeDatabase); // returns a list of object keys
+  console.log('allClasses is:', allClasses);
+  res.send(allClasses);
+});
+
+app.get('/classes/:classid', (req, res) => {
+  const classToLookup = req.params.classid; // matches ':classid' above
+  const val = fakeDatabase[classToLookup];
+  console.log(classToLookup, '->', val); // for debugging
+  if (val) {
+    res.send(val);
+  } else {
+    res.send({}); // failed, so return an empty object instead of undefined
+  }
+});
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));

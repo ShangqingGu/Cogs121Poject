@@ -1,6 +1,17 @@
 <html>
 <head>
 	<title>Home Page</title>
+
+	<script src="https://code.jquery.com/jquery.js"></script>
+
+	<script type="text/javascript">
+	$(document).ready(() => {
+		$('#showButton').click(() =>{
+			console.log("clicked");
+			$('#userInfo').fadeIn();
+		}); //showButton click
+	});	//doc ready
+	</script>
 </head>
 <body>
 	<div class="container-fluid">
@@ -8,7 +19,12 @@
 	    <h1>Home Page</h1>
 	    <hr>
 	  </div>
-		<button>Show my information</button>
+	  <button id="showButton">Show my information</button>
+	  <div id="userInfo" style="display: none">
+	  	<br>
+	  	<p> UCSD Student major in HCI, Third Year Student in TMC College<p/>
+	  	<img src="/images/temp.png">
+	  </div>
 	</div>
 </body>
 </html>

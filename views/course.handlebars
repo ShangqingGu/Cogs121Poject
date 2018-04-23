@@ -1,6 +1,52 @@
 <html>
 <head>
 	<title>Courses Page</title>
+
+
+	<script src="https://code.jquery.com/jquery.js"></script>
+
+	<script type="text/javascript">
+	$(document).ready(() => {
+		$('#showid').click(() =>{
+			console.log("clicked showid");
+			const requestClass = 'classes/' + $('#classBox').val();
+			console.log("getting classid from:", requestClass);
+
+			$.ajax({
+				url: requestClass,
+      			type: 'GET',
+      			dataType : 'json', // this URL returns data in JSON format
+      			success: (data) => {
+      				console.log('You received some data!', data);
+
+      				if(data.prof && data.time){
+      					$('#status').html('Get the classid of: '+requestClass);
+      					$('#profDiv').html('The professor is: '+data.prof);
+      					$('#timeDiv').html('The class time is: '+data.time);
+      				}else{
+      					$('#status').html('ERROR WHEN GETTING FROM: '+requestClass);
+      					$('#profDiv').html('');
+      					$('#timeDiv').html('');
+      				}
+      			},
+			});
+		}); //showid click
+
+		$('#showClasses').click(() => {
+    		$.ajax({
+      		url: 'classes/',
+      		type: 'GET',
+      		dataType : 'json',
+      		success: (data) => {
+        		console.log('You received some data!', data);
+        		$('#status').html('All classes: ' + data);
+      		},
+    	  });
+  		});//ShowClasses click
+
+	});	//doc ready
+	</script>
+
 </head>
 <body>
 	<div class="container-fluid">
@@ -8,6 +54,16 @@
 	    <h1>Course Page</h1>
 	    <hr>
 	  </div>
+	  Class: <input id="classBox" type="text" size="20"/>
+
+	  <button id="showClasses">Show All Classes</button>
+	  <button id="showid">Get Class Detail</button>
+	</div>
+
+	<div class="jumbotron">
+		<div id="status"></div>
+		<div id="profDiv"></div>
+		<div id="timeDiv"></div>	
 	</div>
 </body>
 </html>
