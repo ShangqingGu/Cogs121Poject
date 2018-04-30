@@ -1,6 +1,20 @@
 <html>
 <head>
 	<title>Friends Page</title>
+
+	<script src="https://code.jquery.com/jquery.js"></script>
+
+	<script type="text/javascript">
+	$(document).ready(() => {
+
+		$('#showFriends').click(() => {
+			// $.ajax({});
+			alert("No Friends Shown Up");
+		});//showFriends click
+
+	});//doc ready
+
+	</script>
 </head>
 <body>
 	<div class="container-fluid">
@@ -8,7 +22,7 @@
 	    <h1>Friend Page</h1>
 	    <hr>
 	  </div>
-		<button>Show my friends</button>
+		<button id="showFriends">Show my friends</button>
 	</div>
 </body>
 </html>
