@@ -44,6 +44,19 @@
     	  });
   		});//ShowClasses click
 
+		$('#addClass').click(() => {
+			console.log("class added");
+			$.ajax({
+				url: 'classes',
+				type: 'POST',
+				data: {
+									class: $('#addClassBox').val()
+							},
+				success: (data) => {
+					$('#classAddedDiv').html("Class Added: " + data.class);
+				}
+			})
+		})
 	});	//doc ready
 	</script>
 
@@ -64,6 +77,12 @@
 		<div id="status"></div>
 		<div id="profDiv"></div>
 		<div id="timeDiv"></div>	
+	</div>
+
+	<div class="container-fluid">
+		<input id="addClassBox" type="text" placeholder="Add a Class" size="20"/>
+		<button id="addClass"> Submit </button>
+		<div id="classAddedDiv"></div>
 	</div>
 </body>
 </html>
