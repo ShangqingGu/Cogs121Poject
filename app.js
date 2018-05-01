@@ -4,16 +4,19 @@
  */
 
 var express = require('express');
+var app = express();
 var http = require('http');
 var path = require('path');
 var handlebars = require('express3-handlebars')
+
+const sqlite3 = require('sqlite3');
+const db = new sqlite3.Database('courses.db');
 
 var index = require('./routes/index');
 var course = require('./routes/course');
 var friend = require('./routes/friend');
 var setting = require('./routes/setting');
 
-var app = express();
 
 // all environments
 app.set('port', process.env.PORT || 3000);
@@ -40,37 +43,50 @@ app.get('/course', course.view);
 app.get('/friend', friend.view);
 app.get('/setting', setting.view);
 
-//milestone3 fake database and get classes
-const fakeDatabase = {
-  'COGS120': {prof:'Prof. Scott Klemmer', time:'9:00am - 10:50am'},
-  'COGS17': {prof:'Dr. Johnson', time:'3:30pm - 4:50pm'},
-  'COGS121': {prof:'Prof. Phillip Guo',time: '2:00pm - 2:50pm'}
-};
 
 app.get('/classes', (req, res) => {
-  const allClasses = Object.keys(fakeDatabase); // returns a list of object keys
-  console.log('allClasses is:', allClasses);
-  res.send(allClasses);
+  db.all('SELECT name FROM courses_info', (err, rows) => {
+    console.log(rows);
+    const allClasses = rows.map(e => e.name); // returns a list of object keys
+    console.log('allClasses is:', allClasses);
+    res.send(allClasses);
+  });
 });
 
 app.get('/classes/:classid', (req, res) => {
   const classToLookup = req.params.classid; // matches ':classid' above
-  const val = fakeDatabase[classToLookup];
-  console.log(classToLookup, '->', val); // for debugging
-  if (val) {
-    res.send(val);
-  } else {
-    res.send({}); // failed, so return an empty object instead of undefined
-  }
+  db.all('SELECT * FROM courses_info WHERE name=$name',
+  {$name: classToLookup}, (err, rows) => {
+    console.log(classToLookup, '->', rows); // for debugging
+    if (rows[0]) {
+      res.send(rows[0]);
+    } else {
+      res.send({}); // failed, so return an empty object instead of undefined
+    }
+  });
 });
+
 
 //Add classes post -> line 47 in course.handlebars
+const bodyParser = require('body-parser');
+app.use(bodyParser.urlencoded({extended: true}));
 app.post('/classes', (req, res) => {
-
-});
+  console.log(req.body);
+  db.run('INSERT INTO courses_info VALUES($name, $prof, $time)',
+   {
+    $name: req.body.name,
+    $prof: req.body.prof,
+    $time: req.body.time,
+   },
+   (err) => {
+     if (err) {
+       res.send({message: 'error in app.post(/classes)'});
+     } else {
+       res.send({message: 'successfully run app.post(/classes)'});
+     }
+   });
+ });
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });
-
-

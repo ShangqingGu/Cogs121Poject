@@ -34,7 +34,7 @@
 
 		$('#showClasses').click(() => {
     		$.ajax({
-      		url: 'classes/',
+      		url: '/classes',
       		type: 'GET',
       		dataType : 'json',
       		success: (data) => {
@@ -45,18 +45,21 @@
   		});//ShowClasses click
 
 		$('#addClass').click(() => {
-			console.log("class added");
 			$.ajax({
-				url: 'classes',
+				url: '/classes',
 				type: 'POST',
+				dataType: 'json',
 				data: {
-									class: $('#addClassBox').val()
+								name: $('#addClassBox').val(),
+								prof: $('#addProfBox').val(),
+								time: $('#addTimeBox').val()
 							},
 				success: (data) => {
-					$('#classAddedDiv').html("Class Added: " + data.class);
+					$('#classAddedDiv').html(data.message);
 				}
-			})
-		})
+			});
+		});
+
 	});	//doc ready
 	</script>
 
@@ -76,12 +79,16 @@
 	<div class="jumbotron">
 		<div id="status"></div>
 		<div id="profDiv"></div>
-		<div id="timeDiv"></div>	
+		<div id="timeDiv"></div>
 	</div>
 
 	<div class="container-fluid">
-		<input id="addClassBox" type="text" placeholder="Add a Class" size="20"/>
-		<button id="addClass"> Submit </button>
+		<hr>
+  	Name: <input id="addClassBox" type="text" placeholder="Add a Class" size="20"/>
+  	Prof: <input id="addProfBox" type="text" placeholder="Professor?" size="20"/>
+  	Time: <input id="addTimeBox" type="text" placeholder="Time?" size="20"/>
+  	<button id="addClass"> Submit </button>
+  	<hr/>
 		<div id="classAddedDiv"></div>
 	</div>
 </body>
