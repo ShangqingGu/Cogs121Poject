@@ -2,11 +2,16 @@
 <head>
 	<title>Courses Page</title>
 
-
+	    <!-- Bootstrap -->
+<!--     <link href="/css/bootstrap.min.css" rel="stylesheet" >
+    <link href="/css/bootstrap-theme.min.css" rel="stylesheet" >
+ -->
+    	<!-- Jquery -->
 	<script src="https://code.jquery.com/jquery.js"></script>
 
 	<script type="text/javascript">
 	$(document).ready(() => {
+
 		$('#showid').click(() =>{
 			console.log("clicked showid");
 			const requestClass = 'classes/' + $('#classBox').val();
@@ -56,6 +61,7 @@
 							},
 				success: (data) => {
 					$('#classAddedDiv').html(data.message);
+					$('#attend').append($('#addClassBox').val());
 				}
 			});
 		});
@@ -64,6 +70,7 @@
 	</script>
 
 </head>
+
 <body>
 	<div class="container-fluid">
 	  <div class="col-xs-12">
@@ -84,12 +91,17 @@
 
 	<div class="container-fluid">
 		<hr>
-  	Name: <input id="addClassBox" type="text" placeholder="Add a Class" size="20"/>
-  	Prof: <input id="addProfBox" type="text" placeholder="Professor?" size="20"/>
-  	Time: <input id="addTimeBox" type="text" placeholder="Time?" size="20"/>
-  	<button id="addClass"> Submit </button>
-  	<hr/>
+	  	Name: <input id="addClassBox" type="text" placeholder="Add a Class" size="20"/>
+	  	Prof: <input id="addProfBox" type="text" placeholder="Professor?" size="20"/>
+	  	Time: <input id="addTimeBox" type="text" placeholder="Time?" size="20"/>
+	  	<button id="addClass"> Submit </button>
+	  	<hr/>
 		<div id="classAddedDiv"></div>
+	</div>
+
+	<div class="jumbotron">
+		classes people attended:
+		<div id="attend"></div>
 	</div>
 </body>
 </html>

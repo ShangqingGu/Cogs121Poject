@@ -6,9 +6,15 @@ db.serialize(() => {
   db.run("CREATE TABLE courses_info (name TEXT, prof TEXT, time TEXT)");
 
   // insert 3 rows of data:
-  db.run("INSERT INTO courses_info VALUES ('COGS120', 'Prof. Scott Klemmer', '9:00am - 10:50am')");
-  db.run("INSERT INTO courses_info VALUES ('COGS17', 'Dr. Johnson', '3:30pm - 4:50pm')");
-  db.run("INSERT INTO courses_info VALUES ('COGS121', 'Prof. Phillip Guo', '2:00pm - 2:50pm')");
+  db.run("INSERT INTO courses_info VALUES ('COGS1', 'De Sa, Virginia', '9:30a-10:50a')");
+  db.run("INSERT INTO courses_info VALUES ('COGS3', 'Boyle, Mary E. T.', '8:00a-9:20a')");
+  db.run("INSERT INTO courses_info VALUES ('COGS9', 'Voytek, Bradley Thomas', '2:00p-3:20p')");
+  db.run("INSERT INTO courses_info VALUES ('COGS10', 'Scott, Taylor Jackson', '3:30p-4:50p')");
+  db.run("INSERT INTO courses_info VALUES ('COGS11', 'Boyle, Mary E. T.', '12:30p-1:50p')");
+  db.run("INSERT INTO courses_info VALUES ('COGS15', 'Bergen, Benjamin', '10:00a-10:50a')");
+  db.run("INSERT INTO courses_info VALUES ('COGS17', 'Johnson, Christine M.', '2:00p-3:20p')");
+  db.run("INSERT INTO courses_info VALUES ('COGS18', 'Staff', '9:00a-9:50a')");
+  db.run("INSERT INTO courses_info VALUES ('COGS100', 'Kirsh, David Joel', '3:30p-4:50p')");
 
   console.log('successfully created the courses_info table in courses.db');
 
