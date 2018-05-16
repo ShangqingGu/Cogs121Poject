@@ -7,10 +7,25 @@
     <link href="/css/bootstrap-theme.min.css" rel="stylesheet" >
  -->
     	<!-- Jquery -->
+	<script src="https://www.gstatic.com/firebasejs/5.0.2/firebase.js"></script>
+	<script>
+			  // Initialize Firebase
+	  var config = {
+	    apiKey: "AIzaSyCFp8GQ4X6bk445Hlit2RDgjLrZboYxBw0",
+	    authDomain: "cogs121project-b08aa.firebaseapp.com",
+	    databaseURL: "https://cogs121project-b08aa.firebaseio.com",
+	    projectId: "cogs121project-b08aa",
+	    storageBucket: "",
+	    messagingSenderId: "962818010492"
+	  };
+	  firebase.initializeApp(config);
+	</script>
 	<script src="https://code.jquery.com/jquery.js"></script>
 
 	<script type="text/javascript">
 	$(document).ready(() => {
+		const database = firebase.database();
+		let num = 1;
 
 		$('#showid').click(() =>{
 			console.log("clicked showid");
@@ -50,20 +65,24 @@
   		});//ShowClasses click
 
 		$('#addClass').click(() => {
-			$.ajax({
-				url: '/classes',
-				type: 'POST',
-				dataType: 'json',
-				data: {
-								name: $('#addClassBox').val(),
-								prof: $('#addProfBox').val(),
-								time: $('#addTimeBox').val()
-							},
-				success: (data) => {
-					$('#classAddedDiv').html(data.message);
-					$('#attend').append($('#addClassBox').val());
-				}
-			});
+			database.ref('users/Shawn/courses').once('value', (snapshot) => {
+	      const data = snapshot.val();
+	      num = Object.keys(data).length;
+				console.log(num);
+	    });
+			const next = num + 1;
+			database.ref('users/Shawn/courses/' + next).set($('#addClassBox').val());
+		});
+
+		$('#showMyClass').click(() => {
+			database.ref('users/Shawn/courses').once('value', (snapshot) => {
+	      const data = snapshot.val();
+				$('#result').html(''); // clear the HTML
+	      $('#result').append('My courses:');
+	      Object.keys(data).forEach((name) => {
+	        $('#result').append('<li>' + data[name] + '</li>');
+	      });
+	    });
 		});
 
 	});	//doc ready
@@ -91,17 +110,16 @@
 
 	<div class="container-fluid">
 		<hr>
-	  	Name: <input id="addClassBox" type="text" placeholder="Add a Class" size="20"/>
-	  	Prof: <input id="addProfBox" type="text" placeholder="Professor?" size="20"/>
-	  	Time: <input id="addTimeBox" type="text" placeholder="Time?" size="20"/>
-	  	<button id="addClass"> Submit </button>
-	  	<hr/>
-		<div id="classAddedDiv"></div>
+	  	<input id="addClassBox" type="text" placeholder="Class name" size="20"/>
+	  	<button id="addClass"> Add course </button>
+	  <hr/>
+		<hr>
+	  	<button id="showMyClass"> Show my course </button>
+	  <hr/>
 	</div>
 
 	<div class="jumbotron">
-		classes people attended:
-		<div id="attend"></div>
+		<div id="result"></div>
 	</div>
 </body>
 </html>

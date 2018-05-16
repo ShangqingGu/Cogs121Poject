@@ -11,11 +11,14 @@ var handlebars = require('express3-handlebars')
 
 const sqlite3 = require('sqlite3');
 const db = new sqlite3.Database('courses.db');
+const firebase = require('firebase-admin');
 
 var index = require('./routes/index');
 var course = require('./routes/course');
 var friend = require('./routes/friend');
 var setting = require('./routes/setting');
+
+let curr_user = '';
 
 
 // all environments
@@ -37,6 +40,18 @@ app.use(express.static(path.join(__dirname, 'public')));
 if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
+
+/*
+var config = {
+    apiKey: "AIzaSyDiPDeKQgsRao9_0MKix0EOASCvHSgSRu8",
+    authDomain: "cogs121-bc073.firebaseapp.com",
+    databaseURL: "https://cogs121-bc073.firebaseio.com",
+    projectId: "cogs121-bc073",
+    storageBucket: "cogs121-bc073.appspot.com",
+    messagingSenderId: "577082983656"
+};
+firebase.initializeApp(config);
+const database = firebase.database();*/
 
 app.get('/', index.view);
 app.get('/course', course.view);
@@ -86,6 +101,11 @@ app.post('/classes', (req, res) => {
      }
    });
  });
+
+app.post('/login', (req, res) => {
+   curr_user = req.body.user;
+   console.log("current user is " + curr_user);
+});
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));

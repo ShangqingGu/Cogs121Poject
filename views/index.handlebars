@@ -2,23 +2,67 @@
 <head>
 	<title>Home Page</title>
 
+
+	<script src="https://www.gstatic.com/firebasejs/5.0.2/firebase.js"></script>
+	<script>
+	  // Initialize Firebase
+	  var config = {
+	    apiKey: "AIzaSyCFp8GQ4X6bk445Hlit2RDgjLrZboYxBw0",
+	    authDomain: "cogs121project-b08aa.firebaseapp.com",
+	    databaseURL: "https://cogs121project-b08aa.firebaseio.com",
+	    projectId: "cogs121project-b08aa",
+	    storageBucket: "",
+	    messagingSenderId: "962818010492"
+	  };
+	  firebase.initializeApp(config);
+	</script>
 	<script src="https://code.jquery.com/jquery.js"></script>
 
 	<script type="text/javascript">
 	$(document).ready(() => {
+		const database = firebase.database();
+
 		$('#showButton').click(() =>{
 			console.log("clicked");
 			$('#userInfo').fadeIn();
 		}); //showButton click
+
+		$('#login_bt').click(() =>{
+			console.log("clicked");
+			const user = $('#emailBox').val();
+			console.log("Checking login for", user);
+			let key = 'users/' + user + '/courses';
+			database.ref(key).set({1: 'COGS1'});
+			key = 'users/' + user + '/friends';
+			database.ref(key).set({1:'John'});
+
+			$.ajax({
+				url: '/login',
+				type: 'POST',
+				dataType: 'json',
+				data: {
+								email: user
+							},
+				success: (data) => {
+					console.log(email + "logged in");
+				},
+			});
+		});
+
 	});	//doc ready
 	</script>
 </head>
+
 <body>
 	<div class="container-fluid">
 	  <div class="col-xs-12">
 	    <h1>Home Page</h1>
 	    <hr>
 	  </div>
+		<div>
+			E-mail: <input id="emailBox" type="text" size="20"/>
+			<button id="login_bt">Log in</button>
+		</div>
 	  <button id="showButton">Show my information</button>
 	  <div id="userInfo" style="display: none">
 	  	<br>

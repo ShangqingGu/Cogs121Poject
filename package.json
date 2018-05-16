@@ -19,7 +19,8 @@
     "mongodb": "*",
     "mongoose": "*",
     "nodemon": "^1.17.3",
-    "sqlite3": "^4.0.0"
+    "sqlite3": "^4.0.0",
+    "firebase-admin": "^5.12.1"
   },
   "engines": {
     "node": "8.9.x"
