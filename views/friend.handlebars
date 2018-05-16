@@ -1,6 +1,19 @@
 <html>
 <head>
 	<title>Friends Page</title>
+	<script src="https://www.gstatic.com/firebasejs/5.0.2/firebase.js"></script>
+	<script>
+	  // Initialize Firebase
+	  var config = {
+	    apiKey: "AIzaSyCFp8GQ4X6bk445Hlit2RDgjLrZboYxBw0",
+	    authDomain: "cogs121project-b08aa.firebaseapp.com",
+	    databaseURL: "https://cogs121project-b08aa.firebaseio.com",
+	    projectId: "cogs121project-b08aa",
+	    storageBucket: "",
+	    messagingSenderId: "962818010492"
+	  };
+	  firebase.initializeApp(config);
+	</script>
 
 	<script src="https://code.jquery.com/jquery.js"></script>
 
@@ -8,11 +21,28 @@
 
 	<script type="text/javascript">
 	$(document).ready(() => {
+		const database = firebase.database();
 
 		$('#showFriends').click(() => {
-			// $.ajax({});
-			alert("No Friends Shown Up");
-		});//showFriends click
+			database.ref('users/Shawn/friends').once('value', (snapshot) => {
+	      const data = snapshot.val();
+				$('#result').html(''); // clear the HTML
+	      $('#result').append('My friends:');
+	      Object.keys(data).forEach((name) => {
+	        $('#result').append('<li>' + data[name] + '</li>');
+	      });
+	    });
+		});
+
+		$('#addFriend').click(() => {
+			database.ref('users/Shawn/friends').once('value', (snapshot) => {
+	      const data = snapshot.val();
+	      num = Object.keys(data).length + 1;
+				console.log(data);
+				console.log(num);
+				database.ref('users/Shawn/friends/' + num).set($('#addFriendBox').val());
+	    });
+		});
 
 	});//doc ready
 
@@ -25,7 +55,14 @@
 	    <h1>Friend Page</h1>
 	    <hr>
 	  </div>
+		<hr>
+	  	<input id="addFriendBox" type="text" placeholder="Friend name" size="20"/>
+	  	<button id="addFriend"> Add friend </button>
+	  <hr/>
 		<button id="showFriends">Show my friends</button>
+		<div class="jumbotron">
+			<div id="result"></div>
+		</div>
 	</div>
 
 	<canvas id="myChart" width="400" height="400"></canvas>
