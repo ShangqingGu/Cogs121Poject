@@ -67,11 +67,11 @@
 		$('#addClass').click(() => {
 			database.ref('users/Shawn/courses').once('value', (snapshot) => {
 	      const data = snapshot.val();
-	      num = Object.keys(data).length;
+	      num = Object.keys(data).length + 1;
+				console.log(data);
 				console.log(num);
+				database.ref('users/Shawn/courses/' + num).set($('#addClassBox').val());
 	    });
-			const next = num + 1;
-			database.ref('users/Shawn/courses/' + next).set($('#addClassBox').val());
 		});
 
 		$('#showMyClass').click(() => {
