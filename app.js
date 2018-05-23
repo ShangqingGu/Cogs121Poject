@@ -53,8 +53,8 @@ var config = {
 firebase.initializeApp(config);
 const database = firebase.database();*/
 
-app.get('/', index.view);
-app.get('/course', course.view);
+app.get('/profile', index.view);
+app.get('/', course.view);
 app.get('/friend', friend.view);
 app.get('/setting', setting.view);
 

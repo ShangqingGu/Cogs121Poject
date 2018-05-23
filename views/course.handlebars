@@ -6,6 +6,7 @@
 <!--     <link href="/css/bootstrap.min.css" rel="stylesheet" >
     <link href="/css/bootstrap-theme.min.css" rel="stylesheet" >
  -->
+ 	<link href="/css/styles.css" rel="stylesheet"
     	<!-- Jquery -->
 	<script src="https://www.gstatic.com/firebasejs/5.0.2/firebase.js"></script>
 	<script>
@@ -59,7 +60,11 @@
       		dataType : 'json',
       		success: (data) => {
         		console.log('You received some data!', data);
-        		$('#status').html('All classes: ' + data);
+        		$('#status').html(''); //clear HTML
+        		$('#status').append('<ul id="allClassList"> </ul>')
+        		Object.keys(data).forEach((name) => {
+        			$('#allClassList').append('<li style="min-height: 35px;"><button type="button" class="remove btn btn-primary" style="float: right">Add</button>' + data[name] +'</li>');        			
+        		})
       		},
     	  });
   		});//ShowClasses click
@@ -80,7 +85,7 @@
 				$('#result').html(''); // clear the HTML
 	      $('#result').append('My courses:');
 	      Object.keys(data).forEach((name) => {
-	        $('#result').append('<li>' + data[name] + '</li>');
+	        $('#result').append('<li style="min-height: 35px;"><button type="button" class="remove btn btn-danger" style="float: right"> Remove </button><button type="button" class="remove btn btn-primary" style="float: right"> Add </button>' + data[name] + '</li>');
 	      });
 	    });
 		});
