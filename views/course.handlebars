@@ -63,7 +63,7 @@
         		$('#status').html(''); //clear HTML
         		$('#status').append('<ul id="allClassList"> </ul>')
         		Object.keys(data).forEach((name) => {
-        			$('#allClassList').append('<li style="min-height: 35px;"><button type="button" class="remove btn btn-primary" style="float: right">Add</button>' + data[name] +'</li>');        			
+        			$('#allClassList').append('<li style="min-height: 35px;"><button type="button" class="addButton btn btn-primary" style="float: right">Add</button>' + data[name] +'</li>');        			
         		})
       		},
     	  });
@@ -85,7 +85,7 @@
 				$('#result').html(''); // clear the HTML
 	      $('#result').append('My courses:');
 	      Object.keys(data).forEach((name) => {
-	        $('#result').append('<li style="min-height: 35px;"><button type="button" class="remove btn btn-danger" style="float: right"> Remove </button><button type="button" class="remove btn btn-primary" style="float: right"> Add </button>' + data[name] + '</li>');
+	        $('#result').append('<li style="min-height: 35px;"><button type="button" class="removeButton btn btn-danger" style="float: right"> Remove </button><button type="button" class="addButton btn btn-primary" style="float: right"> Add </button>' + data[name] + '</li>');
 	      });
 	    });
 		});

@@ -29,7 +29,7 @@
 				$('#result').html(''); // clear the HTML
 	      $('#result').append('My friends:');
 	      Object.keys(data).forEach((name) => {
-	        $('#result').append('<li>' + data[name] + '</li>');
+	        $('#result').append('<li><a id="' + data[name] + '">' + data[name] + '</a></li>');
 	      });
 	    });
 		});
