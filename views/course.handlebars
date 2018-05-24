@@ -27,6 +27,31 @@
 	$(document).ready(() => {
 		const database = firebase.database();
 		let num = 1;
+		$.ajax({
+      		url: '/classes',
+      		type: 'GET',
+      		dataType : 'json',
+      		success: (data) => {
+        		console.log('You received some data!', data);
+        		$('#status').html(''); //clear HTML
+        		$('#status').append('<ul id="allClassList"> </ul>');
+        		//load allClasses
+        		Object.keys(data).forEach((name) => {
+        			$('#allClassList').append('<li style="min-height: 35px;"><button type="button" class="addButton btn btn-primary" style="float: right">Add</button>' + data[name] +'</li>');        			
+        		})
+      		},
+    	  });
+
+		//load myClasses
+		database.ref('users/Shawn/courses').once('value', (snapshot) => {
+	      const data = snapshot.val();
+				$('#result').html(''); // clear the HTML
+	      $('#result').append('My courses:');
+	      Object.keys(data).forEach((name) => {
+	        $('#result').append('<li style="min-height: 35px;"><button type="button" class="removeButton btn btn-danger" style="float: right"> Remove </button><button type="button" class="addButton btn btn-primary" style="float: right"> Add </button>' + data[name] + '</li>');
+	      });
+	    });
+		});
 
 		$('#showid').click(() =>{
 			console.log("clicked showid");
@@ -54,19 +79,6 @@
 		}); //showid click
 
 		$('#showClasses').click(() => {
-    		$.ajax({
-      		url: '/classes',
-      		type: 'GET',
-      		dataType : 'json',
-      		success: (data) => {
-        		console.log('You received some data!', data);
-        		$('#status').html(''); //clear HTML
-        		$('#status').append('<ul id="allClassList"> </ul>')
-        		Object.keys(data).forEach((name) => {
-        			$('#allClassList').append('<li style="min-height: 35px;"><button type="button" class="addButton btn btn-primary" style="float: right">Add</button>' + data[name] +'</li>');        			
-        		})
-      		},
-    	  });
   		});//ShowClasses click
 
 		$('#addClass').click(() => {
@@ -80,15 +92,7 @@
 		});
 
 		$('#showMyClass').click(() => {
-			database.ref('users/Shawn/courses').once('value', (snapshot) => {
-	      const data = snapshot.val();
-				$('#result').html(''); // clear the HTML
-	      $('#result').append('My courses:');
-	      Object.keys(data).forEach((name) => {
-	        $('#result').append('<li style="min-height: 35px;"><button type="button" class="removeButton btn btn-danger" style="float: right"> Remove </button><button type="button" class="addButton btn btn-primary" style="float: right"> Add </button>' + data[name] + '</li>');
-	      });
-	    });
-		});
+			
 
 	});	//doc ready
 	</script>
@@ -103,7 +107,7 @@
 	  </div>
 	  Class: <input id="classBox" type="text" size="20"/>
 
-	  <button id="showClasses">Show All Classes</button>
+	  <!-- <button id="showClasses">Show All Classes</button> -->
 	  <button id="showid">Get Class Detail</button>
 	</div>
 
@@ -118,9 +122,9 @@
 	  	<input id="addClassBox" type="text" placeholder="Class name" size="20"/>
 	  	<button id="addClass"> Add course </button>
 	  <hr/>
-		<hr>
+		<!-- <hr>
 	  	<button id="showMyClass"> Show my course </button>
-	  <hr/>
+	  <hr/> -->
 	</div>
 
 	<div class="jumbotron">
