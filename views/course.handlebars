@@ -6,7 +6,8 @@
 <!--     <link href="/css/bootstrap.min.css" rel="stylesheet" >
     <link href="/css/bootstrap-theme.min.css" rel="stylesheet" >
  -->
- 	<link href="/css/styles.css" rel="stylesheet"
+ 	<link href="/css/styles.css" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Lato|Raleway" rel="stylesheet">
     	<!-- Jquery -->
 	<script src="https://www.gstatic.com/firebasejs/5.0.2/firebase.js"></script>
 	<script>
@@ -37,7 +38,7 @@
         		$('#status').append('<ul id="allClassList"> </ul>');
         		//load allClasses
         		Object.keys(data).forEach((name) => {
-        			$('#allClassList').append('<li style="min-height: 35px;"><button type="button" class="addButton btn btn-primary" style="float: right">Add</button>' + data[name] +'</li>');        			
+        			$('#allClassList').append('<li> <span class="className">' + data[name] +'</span><a href="#" class="addButton"><img src="images/addButton.png"> </a></li>');        			
         		})
       		},
     	  });
@@ -46,9 +47,9 @@
 		database.ref('users/Shawn/courses').once('value', (snapshot) => {
 	      const data = snapshot.val();
 				$('#result').html(''); // clear the HTML
-	      $('#result').append('My courses:');
+	      // $('#result').append('My courses:');
 	      Object.keys(data).forEach((name) => {
-	        $('#result').append('<li style="min-height: 35px;"><button type="button" class="removeButton btn btn-danger" style="float: right"> Remove </button><button type="button" class="addButton btn btn-primary" style="float: right"> Add </button>' + data[name] + '</li>');
+	        $('#result').append('<li>' + data[name] + '<a href="#" class="deleteButton"><img src="images/deleteButton.png"> </a><a href="#" class="addButton"><img src="images/addButton.png"></li>');
 	      });
 	    });
 		});
@@ -105,30 +106,28 @@
 	    <h1>Course Page</h1>
 	    <hr>
 	  </div>
-	  Class: <input id="classBox" type="text" size="20"/>
-
-	  <!-- <button id="showClasses">Show All Classes</button> -->
-	  <button id="showid">Get Class Detail</button>
 	</div>
-
-	<div class="jumbotron">
-		<div id="status"></div>
-		<div id="profDiv"></div>
-		<div id="timeDiv"></div>
-	</div>
-
-	<div class="container-fluid">
-		<hr>
-	  	<input id="addClassBox" type="text" placeholder="Class name" size="20"/>
-	  	<button id="addClass"> Add course </button>
-	  <hr/>
+	<div class="container">
+		<div class="col-lg-12" style="display:flex; justify-content: center; margin-bottom: 30px;">
+			<input value="Class name" id="classBox" type="text" size="20"/>
+		  	<!-- <button id="showClasses">Show All Classes</button> -->
+		  	<button id="showid">Get Class Detail</button>
+		  	<input id="addClassBox" type="text" placeholder="Class name" size="20"/>
+		  	<button id="addClass"> Add course </button>
+		</div>
+		<div class="col-lg-6" style="border-right: 1px solid #9e9e9e;"">
+			<h3> Available Courses </h3> <hr>
+			<div id="status"></div>
+			<div id="profDiv"></div>
+			<div id="timeDiv"></div>
+		</div>
 		<!-- <hr>
 	  	<button id="showMyClass"> Show my course </button>
 	  <hr/> -->
+	<div class="col-lg-6"">
+		<h3> My Courses </h3> <hr>
+		<ul id="result"></ul>
 	</div>
-
-	<div class="jumbotron">
-		<div id="result"></div>
 	</div>
 </body>
 </html>

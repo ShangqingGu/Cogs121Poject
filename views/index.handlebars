@@ -2,6 +2,8 @@
 <head>
 	<title>Profile</title>
 
+	<link rel="stylesheet" type="text/css" href="css/styles.css">
+	<link href="https://fonts.googleapis.com/css?family=Lato|Raleway" rel="stylesheet">
 
 	<script src="https://www.gstatic.com/firebasejs/5.0.2/firebase.js"></script>
 	<script>
@@ -22,10 +24,10 @@
 	$(document).ready(() => {
 		const database = firebase.database();
 
-		$('#showButton').click(() =>{
-			console.log("clicked");
-			$('#userInfo').fadeIn();
-		}); //showButton click
+		// $('#showButton').click(() =>{
+		// 	console.log("clicked");
+		// 	$('#userInfo').fadeIn();
+		// }); //showButton click
 
 		$('#login_bt').click(() =>{
 			console.log("clicked");
@@ -54,20 +56,20 @@
 </head>
 
 <body>
-	<div class="container-fluid">
+	<div class="container-fluid profileWrapper">
 	  <div class="col-xs-12">
 	    <h1>Profile</h1>
 	    <hr>
 	  </div>
-		<div>
+		<!-- <div>
 			E-mail: <input id="emailBox" type="text" size="20"/>
 			<button id="login_bt">Log in</button>
-		</div>
-	  <button id="showButton">Show my information</button>
-	  <div id="userInfo" style="display: none">
+		</div> -->
+	  <!-- <button id="showButton">Show my information</button> -->
+	  <div id="userInfo">
 	  	<br>
+	  	<img src="/images/temp.png" id="userImage">
 	  	<p> UCSD Student major in HCI, Third Year Student in TMC College<p/>
-	  	<img src="/images/temp.png">
 	  </div>
 	</div>
 </body>
