@@ -16,10 +16,6 @@ const firebase = require('firebase-admin');
 var index = require('./routes/index');
 var course = require('./routes/course');
 var friend = require('./routes/friend');
-var setting = require('./routes/setting');
-
-let curr_user = '';
-
 
 // all environments
 app.set('port', process.env.PORT || 3000);
@@ -41,22 +37,9 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
-/*
-var config = {
-    apiKey: "AIzaSyDiPDeKQgsRao9_0MKix0EOASCvHSgSRu8",
-    authDomain: "cogs121-bc073.firebaseapp.com",
-    databaseURL: "https://cogs121-bc073.firebaseio.com",
-    projectId: "cogs121-bc073",
-    storageBucket: "cogs121-bc073.appspot.com",
-    messagingSenderId: "577082983656"
-};
-firebase.initializeApp(config);
-const database = firebase.database();*/
 
-app.get('/profile', index.view);
 app.get('/', index.view);
 app.get('/friend', friend.view);
-app.get('/setting', setting.view);
 app.get('/course', course.view);
 
 

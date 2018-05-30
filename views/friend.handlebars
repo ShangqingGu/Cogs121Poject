@@ -41,17 +41,6 @@
 				}
 	    });
    	});
-		/* show friends button
-		$('#showFriends').click(() => {
-			database.ref('users/' + userID + '/friends').on('value', (snapshot) => {
-	      const data = snapshot.val();
-				$('#result').html(''); // clear the HTML
-	      $('#result').append('My friends:');
-	      Object.keys(data).forEach((name) => {
-	        $('#result').append('<li><a id="' + data[name] + '">' + data[name] + '</a></li>');
-	      });
-	    });
-		});*/
 		// add friend button
 		$('#addFriend').click(() => {
 			database.ref('users/' + userID + '/friends').once('value', (snapshot) => {
@@ -92,6 +81,7 @@
 
 </head>
 <body>
+	{{>nav}}
 	<div class="container-fluid">
 	  <div class="col-xs-12">
 	    <h1>Friend Page</h1>
