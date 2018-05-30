@@ -62,8 +62,9 @@
 						let found = false;
 						Object.keys(data).forEach((name) => {
 							if(data[name] == newFriend) {
-				      	found = true;
 								alert("You already have " + newFriend + " added as friend");
+								found = true;
+								return;
 							}
 				    });
 						if(!found) {

@@ -22,10 +22,11 @@
 	<script src="https://code.jquery.com/jquery.js"></script>
 
 	<script type="text/javascript">
+	const database = firebase.database();
+	const userID = sessionStorage.getItem('curr_user');
+	console.log("course page for " + userID);
+
 	$(document).ready(() => {
-		const database = firebase.database();
-		const userID = sessionStorage.getItem('curr_user');
-		console.log("course page for " + userID);
 		// load all courses (static)
 		let num = 0;
 		$.ajax({
@@ -38,7 +39,7 @@
     		$('#status').append('<ul id="allClassList"> </ul>');
     		//load allClasses
     		Object.keys(data).forEach((name) => {
-    			$('#allClassList').append('<li> <span class="className">' + data[name] +'</span><a href="#" class="addButton"><img src="images/addButton.png"> </a></li>');
+    			$('#allClassList').append('<li> <span class="className">' + data[name] +'</span><button onclick="add_bt(' + "'" + data[name] +"'" + ')" class="addButton"><img src="images/addButton.png"> </button></li>');
     		})
   		},
     });
@@ -48,7 +49,7 @@
 			$('#result').html(''); // clear the HTML
 	    Object.keys(data).forEach((name) => {
 				if(name != 'num') {
-	      	$('#result').append('<li>' + data[name] + '<a href="#" class="deleteButton"><img src="images/deleteButton.png"> </a></li>');
+	      	$('#result').append('<li> <span class="className">' + data[name] + '</span><button onclick="delete_bt(' + "'" + data[name] +"'" + ')" class="deleteButton"><img src="images/deleteButton.png"> </button></li>');
 				}
 	    });
    	});
@@ -84,7 +85,44 @@
 				database.ref('users/' + userID + '/courses/num').set(num);
 	    });
 		});
+
 	});	//doc ready
+
+	function add_bt(course) {
+		database.ref('users/' + userID + '/courses').once('value', (snapshot) => {
+			const data = snapshot.val();
+			num = data.num + 1;
+			found = false;
+			Object.keys(data).forEach((name) => {
+				if(data[name] == course) {
+	      	alert("This course is already added");
+					found = true;
+					return;
+				}
+	    });
+			if(!found) {
+				database.ref('users/' + userID + '/courses/' + num).set(course);
+				database.ref('users/' + userID + '/courses/num').set(num);
+			}
+		});
+	}
+
+	function delete_bt(course) {
+		database.ref('users/' + userID + '/courses').once('value', (snapshot) => {
+			const data = snapshot.val();
+			num = data.num + 1;
+			let found = 0;
+			Object.keys(data).forEach((name) => {
+				if(data[name] == course) {
+	      	found = name;
+				}
+	    });
+			if(found != 0) {
+				database.ref('users/' + userID + '/courses/' + found).remove();
+			}
+		});
+	}
+
 	</script>
 
 </head>
