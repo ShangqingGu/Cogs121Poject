@@ -1,5 +1,7 @@
+<!DOCTYPE html>
 <html>
 <head>
+	<meta charset="UTF-8">
 	<title>Friends Page</title>
  	<link href="css/styles.css" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css?family=Lato|Raleway" rel="stylesheet">
@@ -24,9 +26,24 @@
 	<script type="text/javascript">
 	$(document).ready(() => {
 		const database = firebase.database();
-
+		const userID = sessionStorage.getItem('curr_user');
+		console.log("friend page for " + userID);
+		// load all courses (static)
+		let num = 0;
+		//load myFriends
+		database.ref('users/' + userID + '/friends').on('value', (snapshot) => {
+	    const data = snapshot.val();
+			$('#result').html(''); // clear the HTML
+			$('#result').append('My friends:');
+	    Object.keys(data).forEach((name) => {
+				if(name != 'num') {
+	      	$('#result').append('<li><a id="' + data[name] + '">' + data[name] + '</a></li>');
+				}
+	    });
+   	});
+		/* show friends button
 		$('#showFriends').click(() => {
-			database.ref('users/Shawn/friends').once('value', (snapshot) => {
+			database.ref('users/' + userID + '/friends').on('value', (snapshot) => {
 	      const data = snapshot.val();
 				$('#result').html(''); // clear the HTML
 	      $('#result').append('My friends:');
@@ -34,15 +51,38 @@
 	        $('#result').append('<li><a id="' + data[name] + '">' + data[name] + '</a></li>');
 	      });
 	    });
-		});
-
+		});*/
+		// add friend button
 		$('#addFriend').click(() => {
-			database.ref('users/Shawn/friends').once('value', (snapshot) => {
+			database.ref('users/' + userID + '/friends').once('value', (snapshot) => {
 	      const data = snapshot.val();
-	      num = Object.keys(data).length + 1;
-				console.log(data);
-				console.log(num);
-				database.ref('users/Shawn/friends/' + num).set($('#addFriendBox').val());
+				const newFriend = $('#addFriendBox').val();
+				const newFriend_ = newFriend.substr(0, newFriend.indexOf('@'));
+				if(newFriend_ == userID) {
+					alert("Can't add yourself as friend");
+					return;
+				}
+				database.ref('users/').once('value', (snapshot) => {
+					if (!snapshot.hasChild(newFriend_)) {
+						alert(newFriend + " is not found in our system");
+						return;
+	        }
+	        else {
+	          console.log(newFriend + " is in database");
+						num = data.num + 1;
+						let found = false;
+						Object.keys(data).forEach((name) => {
+							if(data[name] == newFriend) {
+				      	found = true;
+								alert("You already have " + newFriend + " added as friend");
+							}
+				    });
+						if(!found) {
+							database.ref('users/' + userID + '/friends/' + num).set($('#addFriendBox').val());
+							database.ref('users/' + userID + '/friends/num').set(num);
+						}
+					}
+				});
 	    });
 		});
 
@@ -58,10 +98,10 @@
 	    <hr>
 	  </div>
 		<hr>
-	  	<input id="addFriendBox" type="text" placeholder="Friend name" size="20"/>
+	  	<input id="addFriendBox" type="text" placeholder="Enter Friend's E-mail" size="20"/>
 	  	<button id="addFriend"> Add friend </button>
 	  <hr/>
-		<button id="showFriends">Show my friends</button>
+		<!--<button id="showFriends">Show my friends</button>-->
 		<div class="jumbotron">
 			<div id="result"></div>
 		</div>

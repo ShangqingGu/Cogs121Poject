@@ -1,11 +1,13 @@
+<!DOCTYPE html>
 <html>
 <head>
+	<meta charset="UTF-8">
 	<title>Profile</title>
 
 	<link rel="stylesheet" type="text/css" href="css/styles.css">
 	<link href="https://fonts.googleapis.com/css?family=Lato|Raleway" rel="stylesheet">
-
 	<script src="https://www.gstatic.com/firebasejs/5.0.2/firebase.js"></script>
+
 	<script>
 	  // Initialize Firebase
 	  var config = {
@@ -18,39 +20,35 @@
 	  };
 	  firebase.initializeApp(config);
 	</script>
+
 	<script src="https://code.jquery.com/jquery.js"></script>
 
 	<script type="text/javascript">
+
 	$(document).ready(() => {
 		const database = firebase.database();
 
-		// $('#showButton').click(() =>{
-		// 	console.log("clicked");
-		// 	$('#userInfo').fadeIn();
-		// }); //showButton click
-
-		$('#login_bt').click(() =>{
-			console.log("clicked");
-			const user = $('#emailBox').val();
-			console.log("Checking login for", user);
-			let key = 'users/' + user + '/courses';
-			database.ref(key).set({1: 'COGS1'});
-			key = 'users/' + user + '/friends';
-			database.ref(key).set({1:'John'});
-
-			$.ajax({
-				url: '/login',
-				type: 'POST',
-				dataType: 'json',
-				data: {
-								email: user
-							},
-				success: (data) => {
-					console.log(email + "logged in");
-				},
+		$('#signin_bt').click(() =>{
+			let provider = new firebase.auth.GoogleAuthProvider();
+			firebase.auth().signInWithPopup(provider).then(function(result) {
+				let userID = result.user.email;
+				console.log(userID + " has logged in");
+				userID = userID.substr(0, userID.indexOf('@'));
+				database.ref('users/').once('value', (snapshot) => {
+					if (!snapshot.hasChild(userID)) {
+						console.log(userID + " is new, adding to database");
+						database.ref('users/' + userID).set({courses: {num: 0}, friends: {num: 0}});
+	        }
+	        else {
+	          console.log(userID + " already in database");
+	        }
+					sessionStorage.setItem('curr_user', userID);
+					location.href = "./course";
+				});
+			}).catch(function(error) {
+				alert("Error when logging in");
 			});
 		});
-
 	});	//doc ready
 	</script>
 </head>
@@ -58,19 +56,15 @@
 <body>
 	<div class="container-fluid profileWrapper">
 	  <div class="col-xs-12">
-	    <h1>Profile</h1>
+	    <h1>Course Share</h1>
 	    <hr>
 	  </div>
-		<!-- <div>
-			E-mail: <input id="emailBox" type="text" size="20"/>
-			<button id="login_bt">Log in</button>
-		</div> -->
-	  <!-- <button id="showButton">Show my information</button> -->
 	  <div id="userInfo">
 	  	<br>
 	  	<img src="/images/temp.png" id="userImage">
-	  	<p> UCSD Student major in HCI, Third Year Student in TMC College<p/>
+	  	<p> Your course community and recommander! <p/>
 	  </div>
+		<button id="signin_bt">Sign in</button>
 	</div>
 </body>
 </html>

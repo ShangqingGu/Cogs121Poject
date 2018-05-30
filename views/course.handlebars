@@ -1,17 +1,14 @@
+<!DOCTYPE html>
 <html>
 <head>
+	<meta charset="UTF-8">
 	<title>Courses Page</title>
 
-	    <!-- Bootstrap -->
-<!--     <link href="/css/bootstrap.min.css" rel="stylesheet" >
-    <link href="/css/bootstrap-theme.min.css" rel="stylesheet" >
- -->
  	<link href="/css/styles.css" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css?family=Lato|Raleway" rel="stylesheet">
-    	<!-- Jquery -->
 	<script src="https://www.gstatic.com/firebasejs/5.0.2/firebase.js"></script>
 	<script>
-			  // Initialize Firebase
+		// Initialize Firebase
 	  var config = {
 	    apiKey: "AIzaSyCFp8GQ4X6bk445Hlit2RDgjLrZboYxBw0",
 	    authDomain: "cogs121project-b08aa.firebaseapp.com",
@@ -27,74 +24,66 @@
 	<script type="text/javascript">
 	$(document).ready(() => {
 		const database = firebase.database();
-		let num = 1;
+		const userID = sessionStorage.getItem('curr_user');
+		console.log("course page for " + userID);
+		// load all courses (static)
+		let num = 0;
 		$.ajax({
-      		url: '/classes',
-      		type: 'GET',
-      		dataType : 'json',
-      		success: (data) => {
-        		console.log('You received some data!', data);
-        		$('#status').html(''); //clear HTML
-        		$('#status').append('<ul id="allClassList"> </ul>');
-        		//load allClasses
-        		Object.keys(data).forEach((name) => {
-        			$('#allClassList').append('<li> <span class="className">' + data[name] +'</span><a href="#" class="addButton"><img src="images/addButton.png"> </a></li>');        			
-        		})
-      		},
-    	  });
-
+      url: '/classes',
+  		type: 'GET',
+    	dataType : 'json',
+  		success: (data) => {
+    		console.log('You received some data!', data);
+    		$('#status').html(''); //clear HTML
+    		$('#status').append('<ul id="allClassList"> </ul>');
+    		//load allClasses
+    		Object.keys(data).forEach((name) => {
+    			$('#allClassList').append('<li> <span class="className">' + data[name] +'</span><a href="#" class="addButton"><img src="images/addButton.png"> </a></li>');
+    		})
+  		},
+    });
 		//load myClasses
-		database.ref('users/Shawn/courses').once('value', (snapshot) => {
-	      const data = snapshot.val();
-				$('#result').html(''); // clear the HTML
-	      // $('#result').append('My courses:');
-	      Object.keys(data).forEach((name) => {
-	        $('#result').append('<li>' + data[name] + '<a href="#" class="deleteButton"><img src="images/deleteButton.png"> </a><a href="#" class="addButton"><img src="images/addButton.png"></li>');
-	      });
+		database.ref('users/' + userID + '/courses').on('value', (snapshot) => {
+	    const data = snapshot.val();
+			$('#result').html(''); // clear the HTML
+	    Object.keys(data).forEach((name) => {
+				if(name != 'num') {
+	      	$('#result').append('<li>' + data[name] + '<a href="#" class="deleteButton"><img src="images/deleteButton.png"> </a></li>');
+				}
 	    });
-		});
-
+   	});
+		// show course detail
 		$('#showid').click(() =>{
 			console.log("clicked showid");
 			const requestClass = 'classes/' + $('#classBox').val();
 			console.log("getting classid from:", requestClass);
-
 			$.ajax({
 				url: requestClass,
-      			type: 'GET',
-      			dataType : 'json', // this URL returns data in JSON format
-      			success: (data) => {
-      				console.log('You received some data!', data);
-
-      				if(data.prof && data.time){
-      					$('#status').html('Get the classid of: '+requestClass);
-      					$('#profDiv').html('The professor is: '+data.prof);
-      					$('#timeDiv').html('The class time is: '+data.time);
-      				}else{
-      					$('#status').html('ERROR WHEN GETTING FROM: '+requestClass);
-      					$('#profDiv').html('');
-      					$('#timeDiv').html('');
-      				}
-      			},
+      	type: 'GET',
+    		dataType : 'json', // this URL returns data in JSON format
+    		success: (data) => {
+    			console.log('You received some data!', data);
+      		if(data.prof && data.time){
+      			$('#status').html('Get the classid of: '+requestClass);
+    				$('#profDiv').html('The professor is: '+data.prof);
+  					$('#timeDiv').html('The class time is: '+data.time);
+      		}else{
+      			$('#status').html('ERROR WHEN GETTING FROM: '+requestClass);
+      			$('#profDiv').html('');
+      			$('#timeDiv').html('');
+    			}
+  			},
 			});
 		}); //showid click
-
-		$('#showClasses').click(() => {
-  		});//ShowClasses click
-
+		// add a course to my_course
 		$('#addClass').click(() => {
-			database.ref('users/Shawn/courses').once('value', (snapshot) => {
+			database.ref('users/' + userID + '/courses').once('value', (snapshot) => {
 	      const data = snapshot.val();
-	      num = Object.keys(data).length + 1;
-				console.log(data);
-				console.log(num);
-				database.ref('users/Shawn/courses/' + num).set($('#addClassBox').val());
+	      num = data.num + 1;
+				database.ref('users/' + userID + '/courses/' + num).set($('#addClassBox').val());
+				database.ref('users/' + userID + '/courses/num').set(num);
 	    });
 		});
-
-		$('#showMyClass').click(() => {
-			
-
 	});	//doc ready
 	</script>
 
@@ -110,10 +99,9 @@
 	<div class="container">
 		<div class="col-lg-12" style="display:flex; justify-content: center; margin-bottom: 30px;">
 			<input value="Class name" id="classBox" type="text" size="20"/>
-		  	<!-- <button id="showClasses">Show All Classes</button> -->
-		  	<button id="showid">Get Class Detail</button>
-		  	<input id="addClassBox" type="text" placeholder="Class name" size="20"/>
-		  	<button id="addClass"> Add course </button>
+		 	<button id="showid">Get Class Detail</button>
+		 	<input id="addClassBox" type="text" placeholder="Class name" size="20"/>
+	  	<button id="addClass"> Add course </button>
 		</div>
 		<div class="col-lg-6" style="border-right: 1px solid #9e9e9e;"">
 			<h3> Available Courses </h3> <hr>
@@ -121,13 +109,10 @@
 			<div id="profDiv"></div>
 			<div id="timeDiv"></div>
 		</div>
-		<!-- <hr>
-	  	<button id="showMyClass"> Show my course </button>
-	  <hr/> -->
-	<div class="col-lg-6"">
-		<h3> My Courses </h3> <hr>
-		<ul id="result"></ul>
-	</div>
+		<div class="col-lg-6"">
+			<h3> My Courses </h3> <hr>
+			<ul id="result"></ul>
+		</div>
 	</div>
 </body>
 </html>
