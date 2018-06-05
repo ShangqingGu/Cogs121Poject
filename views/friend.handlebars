@@ -24,10 +24,11 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js"></script>
 
 	<script type="text/javascript">
+	const database = firebase.database();
+	const userID = sessionStorage.getItem('curr_user');
+	console.log("friend page for " + userID);
+
 	$(document).ready(() => {
-		const database = firebase.database();
-		const userID = sessionStorage.getItem('curr_user');
-		console.log("friend page for " + userID);
 		// load all courses (static)
 		let num = 0;
 		//load myFriends
@@ -37,7 +38,7 @@
 			$('#result').append('My friends:');
 	    Object.keys(data).forEach((name) => {
 				if(name != 'num') {
-	      	$('#result').append('<li><a id="' + data[name] + '">' + data[name] + '</a></li>');
+	      	$('#result').append('<li> <span class="friendName">' + data[name] +'</span><button onclick="check_bt(' + "'" + data[name] +"'" + ')" class="addButton">Check courses</button></li>');
 				}
 	    });
    	});
@@ -78,6 +79,20 @@
 
 	});//doc ready
 
+	function check_bt(friend) {
+		const friend_ = friend.substr(0, friend.indexOf('@'));
+		const key = 'users/' + friend_ + '/courses';
+		database.ref(key).once('value', (snapshot) => {
+			const data = snapshot.val();
+			$('#friendCourse').html('');
+			$('#friendCourse').append(friend + "'s courses:");
+			Object.keys(data).forEach((name) => {
+				if(name != 'num') {
+					$('#friendCourse').append('<li>' + data[name] + '</li>');
+				}
+			});
+		});
+	}
 	</script>
 
 </head>
@@ -92,50 +107,55 @@
 	  	<input id="addFriendBox" type="text" placeholder="Enter Friend's E-mail" size="20"/>
 	  	<button id="addFriend"> Add friend </button>
 	  <hr/>
-		<!--<button id="showFriends">Show my friends</button>-->
 		<div class="jumbotron">
 			<div id="result"></div>
+			<div id="friendCourse"></div>
 		</div>
 	</div>
 
 	<canvas id="myChart"></canvas>
 	<script>
-	var ctx = document.getElementById("myChart");
-	var myChart = new Chart(ctx, {
-	    type: 'radar',
-	    data: {
-	        labels: ["COGS120", "COGS121", "COGS17", "COGS100", "COGS1", "COGS10"],
-	        datasets: [{
-	            label: '# of people attending',
-	            data: [12, 19, 20, 5, 15, 13],
-	            backgroundColor: [
-	                'rgba(255, 99, 132, 0.2)',
-	                'rgba(54, 162, 235, 0.2)',
-	                'rgba(255, 206, 86, 0.2)',
-	                'rgba(75, 192, 192, 0.2)',
-	                'rgba(153, 102, 255, 0.2)',
-	                'rgba(255, 159, 64, 0.2)'
-	            ],
-	            borderColor: [
-	                'rgba(255,99,132,1)',
-	                'rgba(54, 162, 235, 1)',
-	                'rgba(255, 206, 86, 1)',
-	                'rgba(75, 192, 192, 1)',
-	                'rgba(153, 102, 255, 1)',
-	                'rgba(255, 159, 64, 1)'
-	            ],
-	            borderWidth: 3
-	        }]
-	    },
-	    options: {
-	        scales: {
-	            yAxes: [{
-	                ticks: {
-	                    beginAtZero:true
-	                }
-	            }]
-	        }
-	    }
+	let myCourses = [];
+	let colors = [];
+	let colors_ = [];
+	let numbers = [];
+	database.ref('users/' + userID + '/courses').on('value', (snapshot) => {
+		const course_data = snapshot.val();
+		database.ref('/courses').on('value', (snapshot) => {
+			const overall = snapshot.val();
+			Object.keys(course_data).forEach((name) => {
+				if(name != 'num') {
+					const temp = course_data[name];
+					myCourses.push(temp);
+					colors.push('rgba(54, 162, 235, 0.2)');
+					colors_.push('rgba(255,99,132,1)');
+					numbers.push(overall[temp] - 1);
+				}
+			});
+			let ctx = document.getElementById("myChart");
+			let myChart = new Chart(ctx, {
+			    type: 'bar',
+			    data: {
+			        labels: myCourses,
+			        datasets: [{
+			            label: '# of friends attending courses that you scheduled',
+			            data: numbers,
+			            backgroundColor: colors,
+			            borderColor:colors_,
+			            borderWidth: 1
+			        }]
+			    },
+			    options: {
+			        scales: {
+			            yAxes: [{
+			                ticks: {
+			                    beginAtZero:true
+			                }
+			            }]
+			        }
+			    }
+			});
+		});
 	});
 	</script>
 </body>

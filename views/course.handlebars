@@ -80,9 +80,32 @@
 		$('#addClass').click(() => {
 			database.ref('users/' + userID + '/courses').once('value', (snapshot) => {
 	      const data = snapshot.val();
-	      num = data.num + 1;
-				database.ref('users/' + userID + '/courses/' + num).set($('#addClassBox').val());
-				database.ref('users/' + userID + '/courses/num').set(num);
+				const newCourse = $('#addClassBox').val();
+				let numInCourse = 0;
+				database.ref('courses/').once('value', (snapshot) => {
+					if (!snapshot.hasChild(newCourse)) {
+						alert(newCourse + " is not found in our system");
+						return;
+	        }
+	        else {
+						numInCourse = snapshot.val().newCourse;
+	          console.log(newCourse + " is in database");
+						num = data.num + 1;
+						let found = false;
+						Object.keys(data).forEach((name) => {
+							if(data[name] == newCourse) {
+								alert("You already have " + newCourse + " added in schedule");
+								found = true;
+								return;
+							}
+				    });
+						if(!found) {
+							database.ref('users/' + userID + '/courses/' + num).set(newCourse);
+							database.ref('users/' + userID + '/courses/num').set(num);
+							database.ref('courses/' + newCourse).set(numInCourse + 1);
+						}
+					}
+				});
 	    });
 		});
 
@@ -103,6 +126,9 @@
 			if(!found) {
 				database.ref('users/' + userID + '/courses/' + num).set(course);
 				database.ref('users/' + userID + '/courses/num').set(num);
+				database.ref('courses/' + course).once('value', (snapshot) => {
+					database.ref('courses/' + course).set(snapshot.val() + 1);
+				});
 			}
 		});
 	}
@@ -119,6 +145,9 @@
 	    });
 			if(found != 0) {
 				database.ref('users/' + userID + '/courses/' + found).remove();
+				database.ref('courses/' + course).once('value', (snapshot) => {
+					database.ref('courses/' + course).set(snapshot.val() - 1);
+				});
 			}
 		});
 	}
