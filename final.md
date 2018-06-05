@@ -32,3 +32,7 @@ index.js
   -Routing for /index
 styles.css
   -basic styling for each html page
+
+The demo video: 
+https://youtu.be/1UiWzaTIfQs
+
