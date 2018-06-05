@@ -99,15 +99,13 @@
 <body>
 	{{>nav}}
 	<div class="container-fluid">
-	  <div class="col-xs-12">
+	  <div class="col-xs-12 center-content">
 	    <h1>Friend Page</h1>
-	    <hr>
 	  </div>
-		<hr>
-	  	<input id="addFriendBox" type="text" placeholder="Enter Friend's E-mail" size="20"/>
-	  	<button id="addFriend"> Add friend </button>
-	  <hr/>
-		<div class="jumbotron">
+	</div>
+		<div class="jumbotron" id="friendInfo">
+			<input id="addFriendBox" type="text" placeholder="Enter Friend's E-mail" size="20"/>
+	  	<button id="addFriend" class="btn btn-warning"> Add friend </button>
 			<div id="result"></div>
 			<div id="friendCourse"></div>
 		</div>
