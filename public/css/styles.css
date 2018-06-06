@@ -99,3 +99,16 @@ body {
 #showid {
 	margin-right: 15px;
 }
+
+#chart {
+	width: 80%;
+	height: 70%;
+	margin-left: auto;
+  margin-right: auto;
+	border-radius: 10px;
+	background:rgba(255,255,255,0.7);
+}
+
+#bot {
+	height: 100px;
+}

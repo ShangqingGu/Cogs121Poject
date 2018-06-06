@@ -24,12 +24,13 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js"></script>
 
 	<script type="text/javascript">
+	// Initialize database and current user
 	const database = firebase.database();
 	const userID = sessionStorage.getItem('curr_user');
 	console.log("friend page for " + userID);
 
 	$(document).ready(() => {
-		// load all courses (static)
+		// pin number in database
 		let num = 0;
 		//load myFriends
 		database.ref('users/' + userID + '/friends').on('value', (snapshot) => {
@@ -78,7 +79,7 @@
 		});
 
 	});//doc ready
-
+	// get a certain friend's course schedule
 	function check_bt(friend) {
 		const friend_ = friend.substr(0, friend.indexOf('@'));
 		const key = 'users/' + friend_ + '/courses';
@@ -111,8 +112,12 @@
 		</div>
 	</div>
 
-	<canvas id="myChart"></canvas>
+	<div id="chart">
+		<canvas id="myChart"></canvas>
+	</div>
+	<div id="bot"></div>
 	<script>
+	// Initialize data props for chart
 	let myCourses = [];
 	let colors = [];
 	let colors_ = [];
@@ -130,6 +135,7 @@
 					numbers.push(overall[temp] - 1);
 				}
 			});
+			// construct bar chart for number of friends for each scheduled course
 			let ctx = document.getElementById("myChart");
 			let myChart = new Chart(ctx, {
 			    type: 'bar',

@@ -27,7 +27,7 @@
 
 	$(document).ready(() => {
 		const database = firebase.database();
-
+		// google sign-in pop-up, Initialize firebase for first sign-in 
 		$('#signin_bt').click(() =>{
 			let provider = new firebase.auth.GoogleAuthProvider();
 			firebase.auth().signInWithPopup(provider).then(function(result) {
@@ -52,7 +52,7 @@
 	});	//doc ready
 	</script>
 </head>
- 
+
 <body id="indexBody" class="center-content">
 	<div class="container-fluid profileWrapper">
 	  <div class="col-xs-12">

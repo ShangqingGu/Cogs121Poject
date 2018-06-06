@@ -111,6 +111,7 @@
 
 	});	//doc ready
 
+	// add course by addButton
 	function add_bt(course) {
 		database.ref('users/' + userID + '/courses').once('value', (snapshot) => {
 			const data = snapshot.val();
@@ -132,7 +133,7 @@
 			}
 		});
 	}
-
+	// delete course from schedule when button clicked
 	function delete_bt(course) {
 		database.ref('users/' + userID + '/courses').once('value', (snapshot) => {
 			const data = snapshot.val();
